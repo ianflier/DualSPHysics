@@ -87,6 +87,7 @@ JSph::JSph(bool cpu,bool withmpi):Cpu(cpu),WithMpi(withmpi){
   PartsLoaded=NULL;
   InOut=NULL;       //<vs_innlet>
   BoundCorr=NULL;   //<vs_innlet>
+  Push=NULL;
   InitVars();
 }
 
@@ -118,6 +119,7 @@ JSph::~JSph(){
   delete PartsLoaded;   PartsLoaded=NULL;
   delete InOut;         InOut=NULL;       //<vs_innlet>
   delete BoundCorr;     BoundCorr=NULL;   //<vs_innlet>
+  delete Push;          Push-NULL;
 }
 
 //==============================================================================
@@ -227,6 +229,8 @@ void JSph::InitVars(){
   VerletStep=0;
   SymplecticDtPre=0;
   DemDtForce=0;  //(DEM)
+ 
+  Push=false;
 }
 
 //==============================================================================
@@ -935,6 +939,7 @@ void JSph::ConfigConstants(bool simulate2d){
   H2=float(h*h);
   Fourh2=float(h*h*4); 
   Eta2=float((h*0.1)*(h*0.1));
+  PushAngle=10;
   if(simulate2d){
     if(TKernel==KERNEL_Wendland){
       Awen=float(0.557/(h*h));
@@ -1919,7 +1924,7 @@ void JSph::SaveInitialDomainVtk()const{
 
 //==============================================================================
 /// Returns size of VTK file with map cells.
-/// Devuelve tamaño de fichero VTK con las celdas del mapa.
+/// Devuelve tamaÃ±o de fichero VTK con las celdas del mapa.
 //==============================================================================
 unsigned JSph::SaveMapCellsVtkSize()const{
   const tuint3 cells=Map_Cells;
@@ -1967,7 +1972,7 @@ void JSph::SaveMapCellsVtk(float scell)const{
 
 //==============================================================================
 /// Adds basic information of resume to hinfo & dinfo.
-/// Añade la informacion basica de resumen a hinfo y dinfo.
+/// AÃ±ade la informacion basica de resumen a hinfo y dinfo.
 //==============================================================================
 void JSph::GetResInfo(float tsim,float ttot,const std::string &headplus,const std::string &detplus,std::string &hinfo,std::string &dinfo){
   hinfo=hinfo+"#RunName;RunCode;DateTime;Np;TSimul;TSeg;TTotal;MemCpu;MemGpu;Steps;PartFiles;PartsOut;MaxParticles;MaxCells;Hw;StepAlgo;Kernel;Viscosity;ViscoValue;DeltaSPH;TMax;Nbound;Nfixed;H;RhopOut;PartsRhopOut;PartsVelOut;CellMode"+headplus;
